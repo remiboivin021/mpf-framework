@@ -40,6 +40,49 @@ nav:
       - Best Practices:
           - Engineering Principles: engineering/best_practices/concepts.md
           - Git Conventions: engineering/best_practices/git.md
+      - Safety-Critical:
+          - SIL3 Zephyr/Rust Rules: engineering/safety_critical/sil3_zephyr_rust.md
+  - Standards:
+      - Applicable Standards: standards/applicable_standards.md
+      - Standards Mapping: standards/standards_mapping.md
+      - Deviations and Justifications: standards/deviations_and_justifications.md
+  - Cybersecurity:
+      - Threat Model: cybersecurity/threat_model.md
+      - Attack Surfaces: cybersecurity/attack_surfaces.md
+      - Secure Communication: cybersecurity/secure_communication.md
+      - Access Control: cybersecurity/access_control.md
+      - Update Security: cybersecurity/update_security.md
+  - Development:
+      - Development Process: development/development_process.md
+      - ROS Guidelines: development/ros_guidelines.md
+      - Coding Rules: development/coding_rules.md
+      - Simulation Policy: development/simulation_policy.md
+      - CI/CD for Robotics: development/ci_cd_robotics.md
+      - Toolchain: development/toolchain.md
+  - Change Management:
+      - Change Impact Analysis: change_management/change_impact_robot.md
+      - Safety Reassessment: change_management/safety_reassessment.md
+      - Regression Policy: change_management/regression_policy.md
+  - Configuration Management:
+      - Robot Configuration: configuration_management/robot_configuration.md
+      - Calibration Management: configuration_management/calibration_management.md
+      - Parameter Management: configuration_management/parameter_management.md
+      - Release Baselines: configuration_management/release_baselines.md
+  - Operations:
+      - Deployment: operations/deployment.md
+      - Startup and Shutdown: operations/startup_shutdown.md
+      - Maintenance: operations/maintenance.md
+      - Incident Response: operations/incident_response.md
+      - Decommissioning: operations/decommissioning.md
+  - Safety Case:
+      - Overview: safety_case/safety_case_overview.md
+      - Assumptions and Scope: safety_case/assumptions_and_scope.md
+      - Top-Level Claims: safety_case/top_level_claims.md
+      - Hazard Analysis Summary: safety_case/hazard_analysis_summary.md
+      - Safety Arguments: safety_case/safety_arguments.md
+      - GSN (Textual): safety_case/gsn_textual.md
+      - Evidence Mapping: safety_case/evidence_mapping.md
+      - Known Limitations: safety_case/known_limitations.md
 
 # Exclude README.md from the docs directory (it's for GitHub, not the built site)
 exclude_docs: |
