@@ -4,61 +4,133 @@ This document outlines the core engineering principles that guide development in
 
 ## YAGNI (You Aren't Gonna Need It)
 
-**Principle:** Do not implement features or abstractions that are not immediately needed.
+**Principle:**
 
-**Guidelines:**
+Do not implement features or abstractions that are not immediately needed.
+
+**Practical Rules:**
+
 - Do not implement features without a validated requirement
 - Every feature must be traceable to a requirement ID
 - Future-proofing is forbidden in safety-critical code
 - No speculative abstractions
 
-**Rationale:** Unnecessary features increase complexity, maintenance burden, and potential failure points in safety-critical systems.
+**Example (Rust):**
+```rust
+// Bad: over-engineered for future needs
+trait DataSource<T> { fn fetch(&self) -> Result<T, Error>; }
+struct ConfigSource<T> { source: Box<dyn DataSource<T>> }
 
-## KISS (Keep It Simple, Stupid)
+// Good: simple implementation for current need
+struct Config { pub max_speed: f32 }
+impl Config {
+    fn load() -> Result<Self, Error> { ... }
+}
+```
 
-**Principle:** Prioritize simplicity and readability in all code and design decisions.
+## KISS – Keep It Simple, Stupid
 
-**Guidelines:**
-- Prioritize simplicity and readability
-- Avoid unnecessary abstractions
-- Each function should do one simple thing
-- Any complex code must be justified and clearly commented
+**Principle:**
 
-**Rationale:** Simple code is easier to verify, test, and maintain. In safety-critical systems, complexity is a liability.
+Always prioritize simplicity and readability. Avoid unnecessary abstraction or hidden logic ("magic").
+
+**Practical Rules:**
+
+- Each function should do one simple thing.
+- Traits and interfaces should be simple and explicit.
+- Avoid:
+    - Dynamic factories
+    - Complex dependency injection containers
+    - Async/futures in safety-critical paths
+- Any complex code must be justified and clearly commented.
+
+**Example (Rust):**
+```rust
+// Bad: unnecessary nested abstractions
+trait MotionExecutor { fn run(&self, cmd: MotionCmd); }
+struct SafeMotionWrapper<T: MotionExecutor> { inner: T }
+impl<T: MotionExecutor> MotionExecutor for SafeMotionWrapper { ... }
+
+// Good: simple and explicit
+fn execute_motion(cmd: MotionCmd) -> Result<(), MotionError> { ... }
+```
 
 ## Fail-Fast / Fail-Safe
 
-**Principle:** Detect errors immediately and ensure the system remains in a safe state under any failure condition.
+**Principle:**
 
-**Guidelines:**
-- Detect errors as soon as they occur
-- Ensure the system remains in a safe state under any failure
-- Never ignore errors
-- Always provide a safe fallback
+- Fail-Fast: detect errors as soon as they occur.
+- Fail-Safe: ensure the system remains in a safe state under any failure.
 
-**Rationale:** Early error detection prevents cascading failures. Fail-safe behavior protects against harm to humans and equipment.
+**Practical Rules:**
+
+- Never ignore a Result or error.
+- On critical error:
+    - Enter degraded mode or trigger Emergency Stop.
+    - Log errors only outside of ISR context.
+- Always provide a safe fallback.
+
+**Example (Rust):**
+```rust
+fn control_motion(cmd: MotionCmd) -> Result<(), MotionError> {
+    cmd.validate_limits(&actuator_limits)?;
+    if !safety_context.is_safe_to_move() {
+        enter_degraded_mode();
+        return Err(MotionError::UnsafeCondition);
+    }
+    execute_with_watchdog(cmd, MOTION_TIMEOUT_MS)
+}
+```
 
 ## Design by Contract (DbC)
 
-**Principle:** Define explicit contracts for all modules, functions, and interfaces.
+**Principle:**
 
-**Guidelines:**
-- Clear preconditions, postconditions, and invariants
-- Validate all inputs
-- Enforce limits explicitly
-- Define expected state before and after execution
+Each module, function, or method must have clear contracts:
 
-**Rationale:** Explicit contracts make behavior predictable and verifiable, essential for safety certification.
+- Preconditions
+- Postconditions
+- Invariants
 
-## SOLID Principles
+**Practical Rules:**
 
-The SOLID principles guide object-oriented design in the framework:
+- Validate all inputs.
+- Enforce limits (e.g., ActuatorLimits).
+- Clearly define expected state before and after execution.
 
-- **S** - Single Responsibility Principle: Each module/function has only one responsibility
-- **O** - Open/Closed Principle: Open for extension but closed for modification
-- **L** - Liskov Substitution Principle: Any trait/type implementation can be replaced without breaking contracts
-- **I** - Interface Segregation Principle: Avoid "fat" traits/interfaces; prefer small, specific ones
-- **D** - Dependency Inversion Principle: Depend on traits/abstractions, not concrete modules
+**Example (Rust):**
+
+```rust
+fn set_velocity(velocity: f32) -> Result<(), MotionError> {
+    ensure!(velocity <= MAX_VELOCITY, MotionError::OutOfBounds);
+    actuator.set_velocity(velocity)?;
+    Ok(())
+}
+```
+
+## SOLID
+
+**Principle:** Follow the 5 SOLID principles for maintainable and safe code.
+
+| Principle | Application for Rust / SIL3 |
+|-----------|----------------------------|
+| S Single Responsibility | Each module/function has only one responsibility. E.g., SafetyService should not do network logging. |
+| O Open/Closed | Open for extension but closed for modification. Use traits to extend behavior. |
+| L Liskov Substitution | Any trait/type implementation can be replaced without breaking contracts. |
+| I Interface Segregation | Avoid "fat" traits. Prefer small, specific traits. |
+| D Dependency Inversion | Depend on traits/abstractions, not concrete modules (Domain and Application layers only). |
+
+**Example (Rust – SRP & DIP):**
+
+```rust
+trait ActuatorRepository { fn read_position(&self, id: ActuatorId) -> Position; }
+
+struct MotionService<R: ActuatorRepository> { repo: R }
+
+impl<R: ActuatorRepository> MotionService<R> {
+    fn control(&self) { ... }
+}
+```
 
 ## Additional Guidelines
 
