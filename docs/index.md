@@ -79,60 +79,25 @@ The initialization script automatically creates and configures these child templ
 
 ## Engineering Principles
 
-### YAGNI (You Aren't Gonna Need It)
+The framework follows core engineering principles essential for safety-critical robotics development:
 
-- Do not implement features without a validated requirement
-- Every feature must be traceable to a requirement ID
-- Future-proofing is forbidden in safety-critical code
-- No speculative abstractions
+- **YAGNI (You Aren't Gonna Need It)**: Avoid unnecessary features and abstractions
+- **KISS (Keep It Simple, Stupid)**: Prioritize simplicity and readability
+- **Fail-Fast / Fail-Safe**: Detect errors early and maintain safe states
+- **Design by Contract (DbC)**: Define explicit contracts for all interfaces
+- **SOLID Principles**: Guide object-oriented design decisions
 
-### KISS (Keep It Simple, Stupid)
+For detailed guidelines and rationale, see [Engineering Principles](./engineering/best_practices/concepts.md).
 
-- Prioritize simplicity and readability
-- Avoid unnecessary abstractions
-- Each function should do one simple thing
-- Any complex code must be justified and clearly commented
+## Git Conventions
 
-### Fail-Fast / Fail-Safe
+All commits must follow structured conventions with **WHY** + **WHAT** sections and declare a Safety Integrity Level (SIL):
 
-- Detect errors as soon as they occur
-- Ensure the system remains in a safe state under any failure
-- Never ignore errors
-- Always provide a safe fallback
+- **`[SIL0]`**: Non-safety changes (documentation, build config)
+- **`[SIL2]`**: Safety-related changes (requires impact assessment and requirement references)
+- **`[SIL3]`**: Critical safety changes (requires failure mode description and verification plan)
 
-### Design by Contract (DbC)
-
-- Clear preconditions, postconditions, and invariants
-- Validate all inputs
-- Enforce limits explicitly
-- Define expected state before and after execution
-
-## Commit Message Conventions
-
-All commits must follow a structured format including **WHY** + **WHAT** sections:
-
-```
-feat(motion_control): add emergency stop logic
-
-WHY:
-Robot may continue moving after sensor failure,
-risking human collision.
-
-WHAT:
-- Added watchdog on motion controller
-- Emergency stop triggered on timeout
-- Updated degraded mode handling
-```
-
-This is enforced via Git hooks and commitlint.
-
-## Safety Integrity Levels (SIL)
-
-All commits must declare a SIL level:
-
-- `[SIL0]`: Non-safety changes
-- `[SIL2]`: Safety-related changes (requires extended description, safety impact, requirement references)
-- `[SIL3]`: Critical safety changes (requires failure mode description and requirement IDs)
+For complete commit message format, examples, and workflow practices, see [Git Conventions](./engineering/best_practices/git.md).
 
 ## Documentation Structure
 
@@ -152,7 +117,7 @@ Please read our [Contributing Guidelines](https://github.com/remiboivin021/mpf-f
 
 ## License
 
-See the LICENSE file in the root of the repository for licensing information.
+This project is licensed under the terms described in the [LICENSE](https://github.com/remiboivin021/mpf-framework/blob/main/LICENSE) file.
 
 ## Support
 

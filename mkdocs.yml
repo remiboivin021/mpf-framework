@@ -36,6 +36,10 @@ theme:
 
 nav:
   - Home: index.md
+  - Engineering:
+      - Best Practices:
+          - Engineering Principles: engineering/best_practices/concepts.md
+          - Git Conventions: engineering/best_practices/git.md
 
 # Exclude README.md from the docs directory (it's for GitHub, not the built site)
 exclude_docs: |
