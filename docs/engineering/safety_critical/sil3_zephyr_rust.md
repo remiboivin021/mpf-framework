@@ -484,8 +484,8 @@ These rules are enforced by:
 - ISO 26262: Road vehicles functional safety
 - MISRA C/MISRA Rust: Coding guidelines
 - Zephyr RTOS Documentation
-- [Coding Rules](../development/coding_rules.md)
-- [Engineering Principles](./best_practices/concepts.md)
+- [Coding Rules](../../development/coding_rules.md)
+- [Engineering Principles](../best_practices/concepts.md)
 
 ## Revision History
 
