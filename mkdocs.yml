@@ -37,6 +37,10 @@ theme:
 nav:
   - Home: index.md
 
+# Exclude README.md from the docs directory (it's for GitHub, not the built site)
+exclude_docs: |
+  README.md
+
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
