@@ -1,0 +1,49 @@
+# Conventional Commit Message (SIL-aware, Safety-Oriented)
+#
+# Format:
+# <type>(<scope>)!: <short summary> [SILx]
+#
+# Examples:
+# fix(safety): correct emergency stop voting logic [SIL3]
+# feat(motion): enforce actuator soft limits [SIL2]
+# refactor(diagnostics): simplify DTC storage [SIL1]
+# docs(architecture): clarify dual-mcu communication flow [SIL0]
+#
+# Allowed types:
+# feat, fix, refactor, test, docs, chore, build, ci
+#
+# SIL Levels:
+# SIL0 - No safety impact
+# SIL1 - Indirect or minor safety relevance
+# SIL2 - Safety mechanism behavior modified
+# SIL3 - Safety-critical function or decision logic
+#
+# ------------------------------------------------------------------
+
+<type>(<scope>): <short summary> [SILx]
+
+Why:
+- Explain the problem, limitation, risk, or motivation.
+- Answer: why was this change necessary?
+- Mandatory for ALL commits (including SIL0).
+
+What:
+- Describe what was changed at a behavioral level.
+- Avoid repeating the diff.
+
+# ------------------------------------------------------------------
+# The sections below are REQUIRED for SIL2 / SIL3 commits
+# ------------------------------------------------------------------
+
+Safety Impact:
+- Describe how safety is affected or improved.
+
+Failure Mode:
+- (SIL3 only)
+- Describe the expected system behavior if this change fails.
+
+Requirements:
+- REQ-SAF-___
+- REQ-MCU-___
+
+# ------------------------------------------------------------------
